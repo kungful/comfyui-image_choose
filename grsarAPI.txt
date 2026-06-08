@@ -1,0 +1,2831 @@
+chat api:点信息
+Chat API
+说明
+接口参数与响应格式与openai api一致
+接口地址更换为(以海外Host为例)
+https://grsaiapi.com
+原接口
+https://api.openai.com/v1/chat/completions
+更换后
+https://grsaiapi.com/v1/chat/completions
+openai api文档
+复制
+https://platform.openai.com/docs/api-reference/chat/create?lang=curl
+支持模型
+gpt-5.5
+gpt-5.4
+gpt-image-2
+gpt-image-2-vip
+nano-banana-2
+nano-banana-2-cl
+nano-banana-2-4k-cl
+nano-banana-pro
+nano-banana-pro-vt
+nano-banana-pro-cl
+nano-banana-pro-vip
+nano-banana-pro-4k-vip
+nano-banana-fast
+nano-banana
+gemini-3.5-flash
+gemini-3.1-pro
+gemini-3.1-flash-lite
+gemini-3-pro
+gemini-3-flash
+gemini-2.5-pro
+gemini-2.5-flash
+示例
+以下是简单的示例
+请求头 Headers
+复制
+{
+  "Content-Type": "application/json",
+  "Authorization": "Bearer apikey"
+}
+请求参数 (JSON)
+复制
+{
+  "model": "gemini-3.1-pro",
+  "stream": true,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant."
+    },
+    {
+      "role": "user",
+      "content": "Hello!"
+    }
+  ]
+}
+参数说明
+model（必填）
+类型: string
+示例: "gemini-3.1-pro"
+描述:
+模型 "gemini-3.1-pro"
+stream（必填）
+类型: boolean
+示例: true
+描述:
+是否流式响应
+messages（必填）
+类型: array
+示例: [{"role": "user", "content": "你好"}]
+描述:
+对话上下文信息
+非流式响应 (JSON)
+复制
+{
+  "id": "xxxx",
+  "object": "chat.completion",
+  "created": 1741569952,
+  "model": "gemini-3.1-pro",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Hello! How can I assist you today?",
+        "refusal": null,
+        "annotations": []
+      },
+      "finish_reason": "stop"
+    }
+  ]
+}
+流式响应 (JSON)
+复制
+{
+  "id": "xxxx",
+  "object": "chat.completion",
+  "created": 1741569952,
+  "model": "gemini-3.1-pro",
+  "choices": [
+    {
+      "index": 0,
+      "delta": {
+        "role": "assistant",
+        "content": "Hello! How can I assist you today?",
+        "refusal": null,
+        "annotations": []
+      },
+      "finish_reason": "stop"
+    }
+  ]
+}
+全部展开
+全部收起
+
+
+
+
+
+
+gpt image gpt:
+
+旧版API文档
+节点信息
+Host(海外)
+复制
+https://grsaiapi.com
+Host(国内直连)
+复制
+https://grsai.dakka.com.cn
+使用方式Host+接口，例如:
+复制
+https://grsai.dakka.com.cn/v1/draw/completions
+图片生成
+POST
+/v1/draw/completions
+API地址
+复制
+/v1/draw/completions
+请求方式
+POST
+响应方式
+stream 或 回调接口
+请求头 Headers
+复制
+{
+  "Content-Type": "application/json",
+  "Authorization": "Bearer apikey"
+}
+请求参数 (JSON)
+复制
+{
+  "model": "gpt-image-2",
+  "prompt": "描述您想要生成的图像内容的提示词",
+  "aspectRatio": "1024x1024",
+  "urls": [
+    "https://example.com/example1.png",
+    "https://example.com/example2.png"
+  ],
+  "webHook": "https://example.com/callback",
+  "shutProgress": false
+}
+参数说明
+model（必填）
+类型: string
+示例: "gpt-image-2"
+描述:
+支持模型:
+gpt-image-2
+gpt-image-2-vip
+prompt（必填）
+类型: string
+示例: "一只可爱的猫咪在草地上玩耍"
+描述:
+提示词
+aspectRatio（选填）
+类型: string
+示例: "1024x1024"
+描述:
+分辨率参考新文档：
+https://qmy27nhsd9.apifox.cn/452409160e0
+新文档中的像素值通用
+quality（选填）
+类型: string
+示例: "auto"
+描述:
+质量: "auto"
+"low"
+"medium"
+"high"
+urls（选填）
+类型: string[]
+示例: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]
+描述:
+参考图片的URL，支持多张图片，支持base64
+webHook（选填）
+类型: string
+示例: "https://your-webhook-url.com/callback"
+描述:
+进度与结果的回调链接
+接口默认以Stream流式响应进行回复
+如果填了webHook，进度与结果则以Post请求回调地址的方式进行回复
+请求头: Content-Type: application/json
+-------
+如果不使用回调，而使用轮询result接口方式获取结果，需要接口立即返回一个id
+则webHook参数填"-1"，那么会立即返回一个id
+shutProgress（选填）
+类型: boolean
+示例: false
+描述:
+关闭进度回复，直接回复最终结果,建议搭配webHook使用
+默认false
+webHook结果
+(请求后该结果会返回一个id，用于对应回调数据)
+(使用流式响应请跳过该步骤)
+复制
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "id": "id"
+  }
+}
+webHook结果参数说明
+(使用流式响应请跳过该步骤)
+code
+类型: number
+示例: 0
+描述:
+状态码：0为成功
+msg
+类型: string
+示例: "success"
+描述:
+状态信息
+data
+类型: object
+示例: {}
+描述:
+数据
+data.id
+类型: object
+示例: "xxxxxx"
+描述:
+程序任务id，对应回调数据
+响应参数 (JSON)
+(流式响应与webHook响应的参数)
+复制
+{
+  "id": "xxxxx",
+  "progress": 100,
+  "results": [
+    {
+      "url": "https://example.com/example.png"
+    }
+  ],
+  "status": "succeeded",
+  "failure_reason": "",
+  "error": ""
+}
+响应参数说明
+id
+类型: string
+示例: "fb3b7d12-e7f3-4eda-b253-327a415a65b1"
+描述:
+Id (webHook回调可以用该id来对应数据)
+url
+类型: string
+示例: "https://example.com/generated-image.jpg"
+描述:
+(旧参数，不会废弃，默认为results中第一个结果的url)
+结果图片的URL（有效期为2小时）
+progress
+类型: number
+示例: 100
+描述:
+任务进度,0~100
+results
+类型: object[]
+描述:
+图片生成结果
+url: 图片链接（有效期为2小时）
+status
+类型: string
+示例: "succeeded"
+描述:
+任务状态
+"running": 进行中
+"succeeded": 成功
+"failed": 失败
+failure_reason
+类型: string
+示例: "error"
+描述:
+失败原因
+"output_moderation": 输出违规
+"input_moderation": 输入违规
+"error": 其他错误
+------
+当生成失败时，会返还积分
+提示：当触发"error"时，可尝试重新提交任务来确保系统稳定性。
+error
+类型: string
+示例: "Invalid input parameters"
+描述:
+失败详细信息
+获取结果接口
+POST
+/v1/draw/result
+另外提供一个接口用于单独获取结果的接口
+(如有单独获取结果的需求，可以使用该接口)
+复制
+/v1/draw/result
+Method
+POST
+请求参数
+复制
+{
+  "id": "xxxxx"
+}
+响应结果
+复制
+{
+  "code": 0,
+  "data": {
+    "id": "xxx",
+    "progress": 100,
+    "status": "succeeded",
+    "failure_reason": "",
+    "error": "",
+    "results": [
+      {
+        "url": "https://example.com/example.png"
+      }
+    ]
+  },
+  "msg": "success"
+}
+响应参数说明
+code
+类型: number
+示例: 0
+描述:
+状态码：0成功, -22任务不存在
+msg
+类型: string
+示例: "success"
+描述:
+状态信息
+data
+类型: object
+描述:
+绘画结果，请参考上方的绘画结果的数据格式
+
+
+
+nano banana api:
+
+旧版API文档
+节点信息
+Host(海外)
+复制
+https://grsaiapi.com
+Host(国内直连)
+复制
+https://grsai.dakka.com.cn
+使用方式Host+接口，例如:
+复制
+https://grsai.dakka.com.cn/v1/draw/nano-banana
+支持Gemini官方接口格式
+支持Gemini官方的接口格式
+基础地址替换为Grsai的地址，模型名称gemini-2.5-flash-image改为nano-banana-fast
+url示例
+https://grsai.dakka.com.cn/v1beta/models/nano-banana-fast:generateContent
+Nano Banana绘画接口
+POST
+/v1/draw/nano-banana
+Nano Banana绘画接口
+复制
+/v1/draw/nano-banana
+请求方式
+POST
+响应方式
+stream 或 回调接口
+请求头 Headers
+复制
+{
+  "Content-Type": "application/json",
+  "Authorization": "Bearer apikey"
+}
+请求参数 (JSON)
+复制
+{
+  "model": "nano-banana-fast",
+  "prompt": "提示词",
+  "aspectRatio": "auto",
+  "imageSize": "1K",
+  "urls": [
+    "https://example.com/example.png"
+  ],
+  "webHook": "https://example.com/callback",
+  "shutProgress": false
+}
+参数说明
+model（必填）
+类型: string
+示例: "nano-banana-fast"
+描述:
+支持模型: nano-banana-2
+nano-banana-2-cl
+nano-banana-2-4k-cl
+nano-banana-fast
+nano-banana
+nano-banana-pro
+nano-banana-pro-vt
+nano-banana-pro-cl
+nano-banana-pro-vip
+nano-banana-pro-4k-vip
+urls（选填）
+类型: array
+示例: ["https://example.com/example.png"]
+描述:
+参考图URL or Base64
+prompt（必填）
+类型: string
+示例: "一只可爱的猫咪在草地上玩耍"
+描述:
+提示词
+aspectRatio（选填）
+类型: string
+示例: "auto"
+描述:
+输出图像比例,支持的比例:
+auto
+1:1
+16:9
+9:16
+4:3
+3:4
+3:2
+2:3
+5:4
+4:5
+21:9
+默认 auto
+-
+nano-banana-2
+nano-banana-2-cl
+nano-banana-2-4k-cl
+额外支持比例:
+1:4
+4:1
+1:8
+8:1
+imageSize（选填）
+类型: string
+示例: "1K"
+描述:
+支持模型：
+nano-banana-2
+nano-banana-2-cl(只支持1k，2k)
+nano-banana-2-4k-cl(只支持4k)
+nano-banana-pro
+nano-banana-pro-vt
+nano-banana-pro-cl
+nano-banana-pro-vip(只支持1k，2k)
+nano-banana-pro-4k-vip(只支持4k)
+-
+输出图像大小,支持的大小:
+1K
+2K
+4K
+默认 1K
+-
+注意：分辨率越高，生成时间越长
+webHook（选填）
+类型: string
+示例: "https://your-webhook-url.com/callback"
+描述:
+进度与结果的回调链接
+接口默认以Stream流式响应进行回复
+如果填了webHook，进度与结果则以Post请求回调地址的方式进行回复
+请求头: Content-Type: application/json
+-------
+如果不使用回调，而使用轮询result接口方式获取结果，需要接口立即返回一个id
+则webHook参数填"-1"，那么会立即返回一个id
+shutProgress（选填）
+类型: boolean
+示例: false
+描述:
+关闭进度回复，直接回复最终结果,建议搭配webHook使用
+默认false
+webHook结果
+(请求后该结果会返回一个id，用于对应回调数据)
+(使用流式响应请跳过该步骤)
+复制
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "id": "id"
+  }
+}
+webHook结果参数说明
+(使用流式响应请跳过该步骤)
+code
+类型: number
+示例: 0
+描述:
+状态码：0为成功
+msg
+类型: string
+示例: "success"
+描述:
+状态信息
+data
+类型: object
+描述:
+数据
+data.id
+类型: object
+示例: "f44bcf50-f2d0-4c26-a467-26f2014a771b"
+描述:
+程序任务id，对应回调数据
+响应参数 (JSON)
+(流式响应与webHook响应的参数)
+复制
+{
+  "id": "xxxxx",
+  "results": [
+    {
+      "url": "https://example.com/example.png",
+      "content": "这是一只可爱的猫咪在草地上玩耍"
+    }
+  ],
+  "progress": 100,
+  "status": "succeeded",
+  "failure_reason": "",
+  "error": ""
+}
+响应参数说明
+id
+类型: string
+示例: "f44bcf50-f2d0-4c26-a467-26f2014a771b"
+描述:
+Id (webHook回调可以用该id来对应数据)
+results
+类型: array
+示例: [{"url": "https://example.com/generated-image.jpg", "content": "这是一只可爱的猫咪在草地上玩耍"}]
+描述:
+结果
+content: 回复内容
+url: 图片URL(有效期为2小时)
+progress
+类型: number
+示例: 100
+描述:
+任务进度,0~100
+status
+类型: string
+示例: "succeeded"
+描述:
+任务状态
+"running": 进行中
+"succeeded": 成功
+"failed": 失败
+failure_reason
+类型: string
+示例: "error"
+描述:
+失败原因
+"output_moderation": 输出违规
+"input_moderation": 输入违规
+"error": 其他错误
+------
+提示：当触发"error"时，可尝试重新提交任务来确保系统稳定性。
+error
+类型: string
+示例: "Invalid input parameters"
+描述:
+失败详细信息
+获取结果接口
+POST
+/v1/draw/result
+另外提供一个接口用于单独获取结果的接口
+(如有单独获取结果的需求，可以使用该接口)
+复制
+/v1/draw/result
+请求方式
+POST
+请求参数
+复制
+{
+  "id": "xxxxx"
+}
+响应结果
+复制
+{
+  "code": 0,
+  "data": {
+    "id": "xxxxx",
+    "results": [
+      {
+        "url": "https://example.com/example.png",
+        "content": "这是一只可爱的猫咪在草地上玩耍"
+      }
+    ],
+    "progress": 100,
+    "status": "succeeded",
+    "failure_reason": "",
+    "error": ""
+  },
+  "msg": "success"
+}
+响应参数说明
+code
+类型: number
+示例: 0
+描述:
+状态码：0成功, -22任务不存在
+msg
+类型: string
+示例: "success"
+描述:
+状态信息
+data
+类型: object
+描述:
+绘画结果，请参考上方的绘画结果的数据格式
+全部展开
+全部收起
+
+
+veo API:
+
+旧版API文档
+节点信息
+Host(海外)
+复制
+https://grsaiapi.com
+Host(国内直连)
+复制
+https://grsai.dakka.com.cn
+使用方式Host+接口，例如:
+复制
+https://grsai.dakka.com.cn/v1/video/veo
+Veo3视频接口
+POST
+/v1/video/veo
+Veo3视频接口
+复制
+/v1/video/veo
+请求方式
+POST
+响应方式
+stream 或 回调接口
+请求头 Headers
+复制
+{
+  "Content-Type": "application/json",
+  "Authorization": "Bearer apikey"
+}
+请求参数 (JSON)
+复制
+{
+  "model": "veo3.1-fast",
+  "prompt": "提示词",
+  "firstFrameUrl": "https://example.com/firstFrame.png",
+  "lastFrameUrl": "",
+  "urls": [],
+  "aspectRatio": "16:9",
+  "webHook": "https://example.com/callback",
+  "shutProgress": false
+}
+参数说明
+model（必填）
+类型: string
+示例: "veo3.1-fast"
+描述:
+支持模型:
+veo3.1-fast
+veo3.1-pro
+prompt（必填）
+类型: string
+示例: "A cute cat playing on the grass"
+描述:
+提示词
+firstFrameUrl（选填）
+类型: string
+示例: "https://example.com/firstFrame.png"
+描述:
+首帧图片URL
+支持模型
+veo3.1-fast
+veo3.1-pro
+lastFrameUrl（选填）
+类型: string
+示例: "https://example.com/lastFrame.png"
+描述:
+尾帧图片URL
+-
+需搭配firstFrameUrl使用
+-
+支持模型
+veo3.1-fast
+veo3.1-pro
+urls（选填）
+类型: string[]
+示例: ["https://example.com/example.png"]
+描述:
+参考图片URL
+-
+最多支持三张图片
+-
+不可搭配首尾帧使用
+-
+支持模型
+veo3.1-fast
+aspectRatio（选填）
+类型: string
+示例: 16:9
+描述:
+输出视频比例,支持的比例:
+16:9
+9:16
+默认 16:9
+webHook（选填）
+类型: string
+示例: "https://your-webhook-url.com/callback"
+描述:
+进度与结果的回调链接
+接口默认以Stream流式响应进行回复，如果填了webHook，进度与结果则以Post请求回调地址的方式进行回复
+请求头: Content-Type: application/json
+-------
+如果不使用回调，而使用轮询result接口方式获取结果，需要接口立即返回一个id
+则webHook参数填"-1"，那么会立即返回一个id
+shutProgress（选填）
+类型: boolean
+示例: false
+描述:
+关闭进度回复，直接回复最终结果,建议搭配webHook使用
+默认false
+webHook结果
+(请求后该结果会返回一个id，用于对应回调数据)
+(使用流式响应请跳过该步骤)
+复制
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "id": "id"
+  }
+}
+webHook结果参数说明
+(使用流式响应请跳过该步骤)
+code
+类型: number
+示例: 0
+描述:
+状态码：0为成功
+msg
+类型: string
+示例: "success"
+描述:
+状态信息
+data
+类型: object
+描述:
+数据
+data.id
+类型: object
+示例: "f44bcf50-f2d0-4c26-a467-26f2014a771b"
+描述:
+程序任务id，对应回调数据
+响应参数 (JSON)
+(流式响应与webHook响应的参数)
+复制
+{
+  "id": "xxxxx",
+  "url": "https://example.com/example.mp4",
+  "progress": 100,
+  "status": "succeeded",
+  "failure_reason": "",
+  "error": ""
+}
+响应参数说明
+id
+类型: string
+示例: "f44bcf50-f2d0-4c26-a467-26f2014a771b"
+描述:
+Id (webHook回调可以用该id来对应数据)
+url
+类型: string
+示例: "https://example.com/example.mp4"
+描述:
+结果视频的URL（有效期为2小时）
+progress
+类型: number
+示例: 100
+描述:
+任务进度,0~100
+status
+类型: string
+示例: "succeeded"
+描述:
+任务状态
+"running": 进行中
+"succeeded": 成功
+"failed": 失败
+failure_reason
+类型: string
+示例: "error"
+描述:
+失败原因
+"output_moderation": 输出违规
+"input_moderation": 输入违规
+"error": 其他错误
+------
+当生成失败时，会返还积分
+error
+类型: string
+示例: "Invalid input parameters"
+描述:
+失败详细信息
+获取结果接口
+POST
+/v1/draw/result
+另外提供一个接口用于单独获取结果的接口
+(如有单独获取结果的需求，可以使用该接口)
+复制
+/v1/draw/result
+请求方式
+POST
+请求参数
+复制
+{
+  "id": "xxxxx"
+}
+响应结果
+复制
+{
+  "code": 0,
+  "data": {
+    "id": "xxxxx",
+    "url": "https://example.com/example.mp4",
+    "progress": 100,
+    "status": "succeeded",
+    "failure_reason": "",
+    "error": ""
+  },
+  "msg": "success"
+}
+响应参数说明
+code
+类型: number
+示例: 0
+描述:
+状态码：0成功, -22任务不存在
+msg
+类型: string
+示例: "success"
+描述:
+状态信息
+data
+类型: object
+描述:
+视频结果，请参考上方的视频结果的数据格式
+
+
+
+
+其它api：
+
+旧版API文档
+节点地址
+Host(海外)
+复制
+https://grsaiapi.com
+Host(国内直连)
+复制
+https://grsai.dakka.com.cn
+创建APIKey接口
+POST
+/client/openapi/createAPIKey
+创建APIKey接口
+复制
+/client/openapi/createAPIKey
+请求方式
+POST
+请求参数 (JSON)
+复制
+{
+  "token": "token参数在用户信息栏目里获取",
+  "type": 0,
+  "name": "",
+  "credits": 0,
+  "expireTime": 0
+}
+请求参数说明
+token
+类型: string
+示例: token
+描述:
+请求令牌，在用户信息栏目里获取
+type
+类型: number
+示例: 0
+描述:
+APIKey类型，0：无限制额度，1：限制额度
+name
+类型: string
+示例: APIKey名称
+描述:
+APIKey名称
+credits
+类型: number
+示例: 10000
+描述:
+积分额度，限制额度时必填
+expireTime
+类型: number
+示例: 1741569952
+描述:
+到期时间，格式为10位时间戳
+响应方式
+JSON
+返回结果
+复制
+{
+  "code": 0,
+  "data": {
+    "createTime": 1766737867,
+    "credits": 0,
+    "expireTime": 0,
+    "id": "xxx",
+    "key": "sk-xxxxxxxxxxxxxx",
+    "name": "APIKey名称"
+  },
+  "msg": "success"
+}
+返回结果
+code
+类型: number
+示例: 0
+描述:
+接口状态码
+msg
+类型: string
+示例: success
+描述:
+接口信息
+data
+类型: object
+示例: {}
+描述:
+接口数据
+data.createTime
+类型: number
+示例: 1766737867
+描述:
+创建时间
+data.credits
+类型: number
+示例: 0
+描述:
+积分额度
+data.expireTime
+类型: number
+示例: 0
+描述:
+到期时间
+data.id
+类型: string
+示例: xxx
+描述:
+APIKeyID
+data.key
+类型: string
+示例: sk-xxxxxxxxxxxxxx
+描述:
+APIKey
+data.name
+类型: string
+示例: APIKey名称
+描述:
+APIKey名称
+编辑APIKey接口
+POST
+/client/openapi/updateAPIKeyInfo
+编辑APIKey接口
+复制
+/client/openapi/updateAPIKeyInfo
+请求方式
+POST
+请求参数 (JSON)
+复制
+{
+  "token": "token参数在用户信息栏目里获取",
+  "type": 0,
+  "name": "",
+  "apiKey": "sk-xxxxx",
+  "credits": 0,
+  "expireTime": 0
+}
+请求参数说明
+token
+类型: string
+示例: token
+描述:
+请求令牌，在用户信息栏目里获取
+apiKey
+类型: string
+示例: sk-xxxxxxxx
+描述:
+需要操作的APIKey
+type
+类型: number
+示例: 0
+描述:
+APIKey类型，0：无限制额度，1：限制额度
+name
+类型: string
+示例: APIKey名称
+描述:
+APIKey名称
+credits
+类型: number
+示例: 10000
+描述:
+积分额度，限制额度时必填
+expireTime
+类型: number
+示例: 1741569952
+描述:
+到期时间，格式为10位时间戳
+响应方式
+JSON
+返回结果
+复制
+{
+  "code": 0,
+  "data": null,
+  "msg": "success"
+}
+返回结果
+code
+类型: number
+示例: 0
+描述:
+接口状态码
+msg
+类型: string
+示例: success
+描述:
+接口信息
+删除APIKey接口
+POST
+/client/openapi/deleteAPIKey
+删除APIKey接口
+复制
+/client/openapi/deleteAPIKey
+请求方式
+POST
+请求参数 (JSON)
+复制
+{
+  "token": "token参数在用户信息栏目里获取",
+  "apiKey": ""
+}
+请求参数说明
+token
+类型: string
+示例: token
+描述:
+请求令牌，在用户信息栏目里获取
+apiKey
+类型: string
+示例: sk-xxxxxxxxxxxxxx
+描述:
+APIKey
+响应方式
+JSON
+返回结果
+复制
+{
+  "code": 0,
+  "data": null,
+  "msg": "success"
+}
+返回结果
+code
+类型: number
+示例: 0
+描述:
+接口状态码
+msg
+类型: string
+示例: success
+描述:
+接口信息
+获取APIKey积分余额接口
+POST
+/client/openapi/getAPIKeyCredits
+获取APIKey积分余额接口
+复制
+/client/openapi/getAPIKeyCredits
+请求方式
+POST
+请求参数 (JSON)
+复制
+{
+  "apiKey": "sk-xxxxxx"
+}
+响应方式
+JSON
+返回结果
+复制
+{
+  "code": 0,
+  "data": {
+    "credits": 10000
+  },
+  "msg": "success"
+}
+返回结果
+code
+类型: number
+示例: 0
+描述:
+接口状态码
+msg
+类型: string
+示例: success
+描述:
+接口信息
+data
+类型: object
+示例: {}
+描述:
+接口数据
+data.credits
+类型: number
+示例: 10000
+描述:
+当前积分余额
+获取账户积分余额接口
+POST
+/client/openapi/getCredits
+获取账户积分余额接口
+复制
+/client/openapi/getCredits
+请求方式
+POST
+请求参数 (JSON)
+复制
+{
+  "token": "token参数在用户信息栏目里获取"
+}
+响应方式
+JSON
+返回结果
+复制
+{
+  "code": 0,
+  "data": {
+    "credits": 10000
+  },
+  "msg": "success"
+}
+返回结果
+code
+类型: number
+示例: 0
+描述:
+接口状态码
+msg
+类型: string
+示例: success
+描述:
+接口信息
+data
+类型: object
+示例: {}
+描述:
+接口数据
+data.credits
+类型: number
+示例: 10000
+描述:
+当前积分余额
+模型状态接口
+GET
+/client/common/getModelStatus?model=modelName
+模型状态接口
+复制
+/client/common/getModelStatus?model=modelName
+请求方式
+GET
+响应方式
+JSON
+请求参数 (model)
+复制
+把modelName替换为具体的模型名称
+返回结果
+复制
+{
+  "code": 0,
+  "data": {
+    "error": "",
+    "status": true
+  },
+  "msg": "success"
+}
+返回结果
+code
+类型: number
+示例: 0
+描述:
+接口状态码
+msg
+类型: string
+示例: success
+描述:
+接口信息
+data
+类型: object
+示例: {}
+描述:
+接口数据
+data.error
+类型: string
+示例: 官网蹦了，等等官网恢复
+描述:
+模型状态错误详情
+data.status
+类型: boolean
+示例: true，模型正常；false，模型异常
+描述:
+模型状态
+全部展开
+全部收起
+
+
+
+
+
+
+新版本的api：
+
+# Grsai API
+
+## API Docs
+- Grsai图片/视频生成接口 [nano-banana接口](https://qmy27nhsd9.apifox.cn/452392911e0.md): 基础节点：
+- Grsai图片/视频生成接口 [gpt-image-2接口](https://qmy27nhsd9.apifox.cn/452409160e0.md): 基础节点：
+- Grsai图片/视频生成接口 [异步生成结果查询接口](https://qmy27nhsd9.apifox.cn/452409577e0.md): 基础节点：
+- openai-completions接口 [/v1/chat/completions](https://qmy27nhsd9.apifox.cn/452418916e0.md): 基础节点：
+- openai-generations接口 [/v1/images/generations](https://qmy27nhsd9.apifox.cn/452417029e0.md): 基础节点：
+
+
+# nano-banana接口
+
+## OpenAPI Specification
+
+```yaml
+openapi: 3.0.1
+info:
+  title: ''
+  description: ''
+  version: 1.0.0
+paths:
+  /v1/api/generate:
+    post:
+      summary: nano-banana接口
+      deprecated: false
+      description: |-
+        基础节点：
+        https://grsaiapi.com                (全球节点)
+        https://grsai.dakka.com.cn     (国内节点)
+
+        例子：
+        https://grsaiapi.com/v1/api/generate
+        https://grsai.dakka.com.cn/v1/api/generate
+      tags:
+        - Grsai图片/视频生成接口
+      parameters:
+        - name: base_url
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: 请前往以下页面获取APIKEY：https://grsai.ai/zh/dashboard/api-keys
+          required: false
+          example: Bearer sk-xxxxxxxxxxx
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                  title: 模型名称
+                  description: |-
+                    支持以下模型
+                    nano-banana
+                    nano-banana-fast
+                    nano-banana-2
+                    nano-banana-2-cl
+                    nano-banana-2-4k-cl
+                    nano-banana-pro
+                    nano-banana-pro-cl
+                    nano-banana-pro-vip
+                    nano-banana-pro-4k-vip
+                prompt:
+                  type: string
+                  title: 提示词
+                images:
+                  type: array
+                  items:
+                    type: string
+                  title: 参考图
+                  description: 支持base64与url链接
+                aspectRatio:
+                  type: string
+                  title: 比例
+                  description: |-
+                    图像比例支持的参数:
+                    auto
+                    1:1
+                    16:9
+                    9:16
+                    4:3
+                    3:4
+                    3:2
+                    2:3
+                    5:4
+                    4:5
+                    21:9
+
+                    nano-banana-2系列额外支持比例
+                    1:4
+                    4:1
+                    1:8
+                    8:1
+                replyType:
+                  type: string
+                  title: 回复类型
+                  description: |-
+                    支持参数
+                    json（返回json）
+                    stream（返回stream）
+                    async（异步轮询）
+                    异步生成结果查询接口：https://qmy27nhsd9.apifox.cn/452409577e0
+                imageSize:
+                  type: string
+                  title: 分辨率
+                  description: 1K、2K、4K
+              required:
+                - model
+                - prompt
+              x-apifox-orders:
+                - model
+                - prompt
+                - images
+                - aspectRatio
+                - imageSize
+                - replyType
+            example:
+              model: nano-banana-2
+              prompt: 生成一张边牧与古牧正在抖音直播间直播带货截图
+              images: []
+              aspectRatio: '1:1'
+              imageSize: 1K
+              replyType: json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    title: 任务id
+                  status:
+                    type: string
+                    title: 状态
+                    description: |
+                      任务状态
+                      running  (进行中)
+                      violation  (违规)
+                      succeeded (生成成功)
+                      failed (任务失败)
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          title: 图片/视频链接
+                      x-apifox-orders:
+                        - url
+                  progress:
+                    type: integer
+                    title: 进度
+                    description: 0~100
+                  error:
+                    type: string
+                    title: 报错信息
+                required:
+                  - id
+                  - status
+                x-apifox-orders:
+                  - id
+                  - status
+                  - progress
+                  - results
+                  - error
+              example:
+                id: 14-5f3cf761-a4bb-486a-8016-77f490998f80
+                status: succeeded
+                results:
+                  - url: >-
+                      https://file1.aitohumanize.com/file/fcdd2d07449d438d9d69d450f5626976.png
+          headers: {}
+          x-apifox-name: 成功
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  status:
+                    type: string
+                    title: 状态
+                    description: |-
+                      状态
+                      violation（违规）
+                      failed（失败）
+                  error:
+                    type: string
+                    title: 报错信息
+                required:
+                  - id
+                  - status
+                  - error
+                x-apifox-orders:
+                  - id
+                  - status
+                  - error
+              example:
+                id: 12-1f771fbf-f23a-4b89-a7d0-a98ba9862edb
+                status: failed
+                error: generate failed
+          headers: {}
+          x-apifox-name: 报错
+        x-200:异步生成返回结果:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    title: 任务id
+                    description: |-
+                      通过该id调用异步结果查询接口
+                      接口文档：https://qmy27nhsd9.apifox.cn/452409577e0
+                  status:
+                    type: string
+                    title: 状态
+                required:
+                  - id
+                  - status
+                x-apifox-orders:
+                  - id
+                  - status
+              example:
+                id: 6-f671fc51-d5d7-4eff-a1c7-26e612fe08ab
+                status: running
+          headers: {}
+          x-apifox-name: 异步生成返回结果
+      security: []
+      x-apifox-folder: Grsai图片/视频生成接口
+      x-apifox-status: released
+      x-run-in-apifox: https://app.apifox.com/web/project/8212034/apis/api-452392911-run
+components:
+  schemas: {}
+  securitySchemes: {}
+servers: []
+security: []
+
+```
+
+
+
+
+
+# gpt-image-2接口
+
+## OpenAPI Specification
+
+```yaml
+openapi: 3.0.1
+info:
+  title: ''
+  description: ''
+  version: 1.0.0
+paths:
+  /v1/api/generate:
+    post:
+      summary: gpt-image-2接口
+      deprecated: false
+      description: |-
+        基础节点：
+        https://grsaiapi.com                (全球节点)
+        https://grsai.dakka.com.cn     (国内节点)
+
+        例子：
+        https://grsaiapi.com/v1/api/generate
+        https://grsai.dakka.com.cn/v1/api/generate
+      tags:
+        - Grsai图片/视频生成接口
+      parameters:
+        - name: base_url
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: 请前往以下页面获取APIKEY：https://grsai.ai/zh/dashboard/api-keys
+          required: false
+          example: Bearer sk-xxxxxxxxxxx
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                  title: 模型名称
+                  description: |-
+                    支持以下模型
+                    gpt-image-2
+                    gpt-image-2-vip
+                prompt:
+                  type: string
+                  title: 提示词
+                images:
+                  type: array
+                  items:
+                    type: string
+                  title: 参考图
+                  description: 支持base64与url链接
+                aspectRatio:
+                  type: string
+                  title: 比例
+                  description: |-
+                    分辨率参数说明
+                      gpt-image-2：支持比例（如 "16:9"）或1K像素值（如 "1024x1024"）
+                      gpt-image-2-vip：支持1-4K像素值（如 "1024x1024"、"2048x2048"），不支持比例
+
+                    自定义像素值约束（仅限 vip 模型）
+                       最大边长必须小于或等于3840px
+                       两条边都必须是16的倍数
+                       长边与短边之比不得超过 3:1
+                       总像素数必须至少为 655,360且不得超过 8,294,400
+
+
+                     gpt-image-2-vip比例参考（1K、2K、4K）：
+                    auto
+                    1:1：1024x1024、2048x2048、2880x2880
+                    16:9：1280x720、2048x1152、3840x2160
+                    9:16：720x1280、1152x2048、2160x3840
+                    4:3：1152x864、2304x1728、3264x2448
+                    3:4：864x1152、1728x2304、2448x3264
+                    3:2：1536x1024、2048x1360、3504x2336
+                    2:3：1024x1536、1360x2048、2336x3504
+                    5:4：1120x896、2240x1792、3200x2560
+                    4:5：896x1120、1792x2240、2560x3200
+                    21:9：1456x624、2912x1248、3840x1648
+                    9:21：624x1456、1248x2912、1648x3840
+                    1:3：688x2048、1280x3840
+                    3:1：2048x688、3840x1280
+                    2:1：1536x768、3072x1536、3840x1920
+                    1:2：768x1536、1536x3072、1920x3840
+
+                     gpt-image-2比例参考：
+                    auto
+                    1:1：1024x1024
+                    16:9：1672 x941
+                    9:16：941x1672 
+                    4:3：1443x1090
+                    3:4：1090x1443
+                    3:2：1536x1024
+                    2:3：1024x1536
+                    5:4：1408x1120
+                    4:5：1120x1408
+                    21:9：1920x832
+                    9:21：832x1920
+                    1:2：896x1792
+                    2:1：1792x896
+                replyType:
+                  type: string
+                  title: 回复类型
+                  description: |-
+                    支持参数
+                    json（返回json）
+                    stream（返回stream）
+                    async（异步轮询）
+                    异步生成结果查询接口：https://qmy27nhsd9.apifox.cn/452409577e0
+              required:
+                - model
+                - prompt
+              x-apifox-orders:
+                - model
+                - prompt
+                - images
+                - aspectRatio
+                - replyType
+            example:
+              model: gpt-image-2
+              prompt: 生成一张边牧与古牧正在抖音直播间直播带货截图
+              images: []
+              aspectRatio: 1024x1024
+              replyType: json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    title: 任务id
+                  status:
+                    type: string
+                    title: 状态
+                    description: |
+                      任务状态
+                      running  (进行中)
+                      violation  (违规)
+                      succeeded (生成成功)
+                      failed (任务失败)
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          title: 图片/视频链接
+                      x-apifox-orders:
+                        - url
+                  progress:
+                    type: integer
+                    title: 进度
+                    description: 0~100
+                  error:
+                    type: string
+                    title: 报错信息
+                required:
+                  - id
+                  - status
+                x-apifox-orders:
+                  - id
+                  - status
+                  - progress
+                  - results
+                  - error
+              example:
+                id: 14-5f3cf761-a4bb-486a-8016-77f490998f80
+                status: succeeded
+                results:
+                  - url: >-
+                      https://file1.aitohumanize.com/file/fcdd2d07449d438d9d69d450f5626976.png
+          headers: {}
+          x-apifox-name: 成功
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  status:
+                    type: string
+                    title: 状态
+                    description: |-
+                      状态
+                      violation（违规）
+                      failed（失败）
+                  error:
+                    type: string
+                    title: 报错信息
+                required:
+                  - id
+                  - status
+                  - error
+                x-apifox-orders:
+                  - id
+                  - status
+                  - error
+              example:
+                id: 12-1f771fbf-f23a-4b89-a7d0-a98ba9862edb
+                status: failed
+                error: generate failed
+          headers: {}
+          x-apifox-name: 报错
+        x-200:异步生成返回结果:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    title: 任务id
+                    description: |-
+                      通过该id调用异步结果查询接口
+                      接口文档：https://qmy27nhsd9.apifox.cn/452409577e0
+                  status:
+                    type: string
+                    title: 状态
+                  01KQS7HP0FA36FTFVEPEF2D10R:
+                    type: string
+                required:
+                  - id
+                  - status
+                x-apifox-orders:
+                  - id
+                  - status
+                  - 01KQS7HP0FA36FTFVEPEF2D10R
+              example:
+                id: 6-f671fc51-d5d7-4eff-a1c7-26e612fe08ab
+                status: running
+          headers: {}
+          x-apifox-name: 异步生成返回结果
+      security: []
+      x-apifox-folder: Grsai图片/视频生成接口
+      x-apifox-status: released
+      x-run-in-apifox: https://app.apifox.com/web/project/8212034/apis/api-452409160-run
+components:
+  schemas: {}
+  securitySchemes: {}
+servers: []
+security: []
+
+```
+
+
+
+
+# 异步生成结果查询接口
+
+## OpenAPI Specification
+
+```yaml
+openapi: 3.0.1
+info:
+  title: ''
+  description: ''
+  version: 1.0.0
+paths:
+  /v1/api/result:
+    get:
+      summary: 异步生成结果查询接口
+      deprecated: false
+      description: |-
+        基础节点：
+        https://grsaiapi.com                (全球节点)
+        https://grsai.dakka.com.cn     (国内节点)
+
+        例子：
+        https://grsaiapi.com/v1/api/result
+        https://grsai.dakka.com.cn/v1/api/result
+      tags:
+        - Grsai图片/视频生成接口
+      parameters:
+        - name: base_url
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: query
+          description: ''
+          required: false
+          example: 1-6634fd9a-3086-4d92-9436-69e86fd23bf8
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: 请前往以下页面获取APIKEY：https://grsai.ai/zh/dashboard/api-keys
+          required: false
+          example: Bearer sk-xxxxxxxxxxx
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    title: 任务id
+                  status:
+                    type: string
+                    title: 状态
+                    description: |
+                      任务状态
+                      running  (进行中)
+                      violation  (违规)
+                      succeeded (生成成功)
+                      failed (任务失败)
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          title: 图片/视频链接
+                      x-apifox-orders:
+                        - url
+                  progress:
+                    type: integer
+                    title: 进度
+                    description: 0~100
+                  error:
+                    type: string
+                    title: 报错信息
+                required:
+                  - id
+                  - status
+                x-apifox-orders:
+                  - id
+                  - status
+                  - progress
+                  - results
+                  - error
+              example:
+                id: 14-5f3cf761-a4bb-486a-8016-77f490998f80
+                status: succeeded
+                results:
+                  - url: >-
+                      https://file1.aitohumanize.com/file/fcdd2d07449d438d9d69d450f5626976.png
+          headers: {}
+          x-apifox-name: 成功
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  status:
+                    type: string
+                    title: 状态
+                    description: |-
+                      状态
+                      violation（违规）
+                      failed（失败）
+                  error:
+                    type: string
+                    title: 报错信息
+                required:
+                  - id
+                  - status
+                  - error
+                x-apifox-orders:
+                  - id
+                  - status
+                  - error
+              example:
+                id: 12-1f771fbf-f23a-4b89-a7d0-a98ba9862edb
+                status: failed
+                error: generate failed
+          headers: {}
+          x-apifox-name: 报错
+      security: []
+      x-apifox-folder: Grsai图片/视频生成接口
+      x-apifox-status: released
+      x-run-in-apifox: https://app.apifox.com/web/project/8212034/apis/api-452409577-run
+components:
+  schemas: {}
+  securitySchemes: {}
+servers: []
+security: []
+
+```
+
+
+
+
+# /v1/chat/completions
+
+## OpenAPI Specification
+
+```yaml
+openapi: 3.0.1
+info:
+  title: ''
+  description: ''
+  version: 1.0.0
+paths:
+  /v1/chat/completions:
+    post:
+      summary: /v1/chat/completions
+      deprecated: false
+      description: |-
+        基础节点：
+        https://grsaiapi.com                (全球节点)
+        https://grsai.dakka.com.cn     (国内节点)
+
+        例子：
+        https://grsaiapi.com/v1/chat/completions
+        https://grsai.dakka.com.cn/v1/chat/completions
+      tags:
+        - openai-completions接口
+      parameters:
+        - name: base_url
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: 请前往以下页面获取APIKEY：https://grsai.ai/zh/dashboard/api-keys
+          required: false
+          example: Bearer sk-xxxxxxxxxxx
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                  title: 模型名称
+                  description: 支持所有模型
+                stream:
+                  type: boolean
+                  title: stream流
+                  default: true
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        title: user
+                      content:
+                        type: string
+                        title: 提示词内容
+                    x-apifox-orders:
+                      - role
+                      - content
+              required:
+                - model
+                - messages
+                - stream
+              x-apifox-orders:
+                - model
+                - stream
+                - messages
+            examples:
+              '1':
+                value:
+                  model: gemini-3.1-pro
+                  stream: false
+                  messages:
+                    - role: user
+                      content: 你好
+                summary: 文字提问
+              '2':
+                value:
+                  model: gemini-3.1-pro
+                  stream: false
+                  messages:
+                    - role: user
+                      content:
+                        - type: text
+                          text: 这张图片内容是什么
+                        - type: image_url
+                          image_url:
+                            url: https://xxxxxxx.png
+                summary: 传递图片提问
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  object:
+                    type: string
+                  created:
+                    type: integer
+                  model:
+                    type: string
+                  choices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                        message:
+                          type: object
+                          properties:
+                            role:
+                              type: string
+                            content:
+                              type: string
+                          required:
+                            - role
+                            - content
+                          x-apifox-orders:
+                            - role
+                            - content
+                        finish_reason:
+                          type: string
+                        content_filter_results:
+                          type: object
+                          properties:
+                            hate:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                              required:
+                                - filtered
+                              x-apifox-orders:
+                                - filtered
+                            self_harm:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                              required:
+                                - filtered
+                              x-apifox-orders:
+                                - filtered
+                            sexual:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                              required:
+                                - filtered
+                              x-apifox-orders:
+                                - filtered
+                            violence:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                              required:
+                                - filtered
+                              x-apifox-orders:
+                                - filtered
+                            jailbreak:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                                detected:
+                                  type: boolean
+                              required:
+                                - filtered
+                                - detected
+                              x-apifox-orders:
+                                - filtered
+                                - detected
+                            profanity:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                                detected:
+                                  type: boolean
+                              required:
+                                - filtered
+                                - detected
+                              x-apifox-orders:
+                                - filtered
+                                - detected
+                          required:
+                            - hate
+                            - self_harm
+                            - sexual
+                            - violence
+                            - jailbreak
+                            - profanity
+                          x-apifox-orders:
+                            - hate
+                            - self_harm
+                            - sexual
+                            - violence
+                            - jailbreak
+                            - profanity
+                      x-apifox-orders:
+                        - index
+                        - message
+                        - finish_reason
+                        - content_filter_results
+                  usage:
+                    type: object
+                    properties:
+                      prompt_tokens:
+                        type: integer
+                      completion_tokens:
+                        type: integer
+                      total_tokens:
+                        type: integer
+                      prompt_tokens_details:
+                        type: 'null'
+                      completion_tokens_details:
+                        type: 'null'
+                    required:
+                      - prompt_tokens
+                      - completion_tokens
+                      - total_tokens
+                      - prompt_tokens_details
+                      - completion_tokens_details
+                    x-apifox-orders:
+                      - prompt_tokens
+                      - completion_tokens
+                      - total_tokens
+                      - prompt_tokens_details
+                      - completion_tokens_details
+                  system_fingerprint:
+                    type: string
+                required:
+                  - id
+                  - object
+                  - created
+                  - model
+                  - choices
+                  - usage
+                  - system_fingerprint
+                x-apifox-orders:
+                  - id
+                  - object
+                  - created
+                  - model
+                  - choices
+                  - usage
+                  - system_fingerprint
+              example:
+                id: 1-2ede12b5-77cc-48f9-b1d0-7ae35ee8d444
+                object: ''
+                created: 1777897048
+                model: gemini-3.1-pro
+                choices:
+                  - index: 0
+                    message:
+                      role: assistant
+                      content: 你好！请问有什么我可以帮您的吗？
+                    finish_reason: stop
+                    content_filter_results:
+                      hate:
+                        filtered: false
+                      self_harm:
+                        filtered: false
+                      sexual:
+                        filtered: false
+                      violence:
+                        filtered: false
+                      jailbreak:
+                        filtered: false
+                        detected: false
+                      profanity:
+                        filtered: false
+                        detected: false
+                usage:
+                  prompt_tokens: 2
+                  completion_tokens: 261
+                  total_tokens: 263
+                  prompt_tokens_details: null
+                  completion_tokens_details: null
+                system_fingerprint: ''
+          headers: {}
+          x-apifox-name: json响应
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        title: 报错信息
+                    required:
+                      - message
+                    x-apifox-orders:
+                      - message
+                required:
+                  - error
+                x-apifox-orders:
+                  - error
+              example:
+                error:
+                  message: generation failed
+          headers: {}
+          x-apifox-name: 报错
+        x-200:stream流响应:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  object:
+                    type: string
+                  created:
+                    type: integer
+                  model:
+                    type: string
+                  choices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                        delta:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            role:
+                              type: string
+                          required:
+                            - content
+                            - role
+                          x-apifox-orders:
+                            - content
+                            - role
+                        finish_reason:
+                          type: 'null'
+                        content_filter_results:
+                          type: object
+                          properties:
+                            hate:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                              required:
+                                - filtered
+                              x-apifox-orders:
+                                - filtered
+                            self_harm:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                              required:
+                                - filtered
+                              x-apifox-orders:
+                                - filtered
+                            sexual:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                              required:
+                                - filtered
+                              x-apifox-orders:
+                                - filtered
+                            violence:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                              required:
+                                - filtered
+                              x-apifox-orders:
+                                - filtered
+                            jailbreak:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                                detected:
+                                  type: boolean
+                              required:
+                                - filtered
+                                - detected
+                              x-apifox-orders:
+                                - filtered
+                                - detected
+                            profanity:
+                              type: object
+                              properties:
+                                filtered:
+                                  type: boolean
+                                detected:
+                                  type: boolean
+                              required:
+                                - filtered
+                                - detected
+                              x-apifox-orders:
+                                - filtered
+                                - detected
+                          required:
+                            - hate
+                            - self_harm
+                            - sexual
+                            - violence
+                            - jailbreak
+                            - profanity
+                          x-apifox-orders:
+                            - hate
+                            - self_harm
+                            - sexual
+                            - violence
+                            - jailbreak
+                            - profanity
+                      x-apifox-orders:
+                        - index
+                        - delta
+                        - finish_reason
+                        - content_filter_results
+                  system_fingerprint:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                      x-apifox-orders:
+                        - url
+                  usage:
+                    type: object
+                    properties:
+                      total_tokens:
+                        type: integer
+                      input_tokens:
+                        type: integer
+                      output_tokens:
+                        type: integer
+                      input_tokens_details:
+                        type: object
+                        properties: {}
+                        x-apifox-orders: []
+                    required:
+                      - total_tokens
+                      - input_tokens
+                      - output_tokens
+                      - input_tokens_details
+                    x-apifox-orders:
+                      - total_tokens
+                      - input_tokens
+                      - output_tokens
+                      - input_tokens_details
+                required:
+                  - id
+                  - object
+                  - created
+                  - model
+                  - choices
+                  - system_fingerprint
+                  - data
+                  - usage
+                x-apifox-orders:
+                  - id
+                  - object
+                  - created
+                  - model
+                  - choices
+                  - system_fingerprint
+                  - data
+                  - usage
+              example: |-
+                data: {
+                    "id": "1-c1e4db8a-fbd4-42a8-8bfa-4a7679416301",
+                    "object": "chat.completion.chunk",
+                    "created": 1777896911,
+                    "model": "gemini-3.1-pro",
+                    "choices": [
+                        {
+                            "index": 0,
+                            "delta": {
+                                "content": "你好！👋 请",
+                                "role": "assistant"
+                            },
+                            "finish_reason": null,
+                            "content_filter_results": {
+                                "hate": {
+                                    "filtered": false
+                                },
+                                "self_harm": {
+                                    "filtered": false
+                                },
+                                "sexual": {
+                                    "filtered": false
+                                },
+                                "violence": {
+                                    "filtered": false
+                                },
+                                "jailbreak": {
+                                    "filtered": false,
+                                    "detected": false
+                                },
+                                "profanity": {
+                                    "filtered": false,
+                                    "detected": false
+                                }
+                            }
+                        }
+                    ],
+                    "system_fingerprint": ""
+                }
+
+                data: {
+                    "id": "1-c1e4db8a-fbd4-42a8-8bfa-4a7679416301",
+                    "object": "chat.completion.chunk",
+                    "created": 1777896911,
+                    "model": "gemini-3.1-pro",
+                    "choices": [
+                        {
+                            "index": 0,
+                            "delta": {
+                                "content": "问有什么我可以帮你的吗？",
+                                "role": "assistant"
+                            },
+                            "finish_reason": null,
+                            "content_filter_results": {
+                                "hate": {
+                                    "filtered": false
+                                },
+                                "self_harm": {
+                                    "filtered": false
+                                },
+                                "sexual": {
+                                    "filtered": false
+                                },
+                                "violence": {
+                                    "filtered": false
+                                },
+                                "jailbreak": {
+                                    "filtered": false,
+                                    "detected": false
+                                },
+                                "profanity": {
+                                    "filtered": false,
+                                    "detected": false
+                                }
+                            }
+                        }
+                    ],
+                    "system_fingerprint": ""
+                }
+
+                data: {
+                    "id": "1-c1e4db8a-fbd4-42a8-8bfa-4a7679416301",
+                    "object": "chat.completion.chunk",
+                    "created": 1777896912,
+                    "model": "gemini-3.1-pro",
+                    "choices": [
+                        {
+                            "index": 0,
+                            "delta": {
+                                "role": "assistant"
+                            },
+                            "finish_reason": null,
+                            "content_filter_results": {
+                                "hate": {
+                                    "filtered": false
+                                },
+                                "self_harm": {
+                                    "filtered": false
+                                },
+                                "sexual": {
+                                    "filtered": false
+                                },
+                                "violence": {
+                                    "filtered": false
+                                },
+                                "jailbreak": {
+                                    "filtered": false,
+                                    "detected": false
+                                },
+                                "profanity": {
+                                    "filtered": false,
+                                    "detected": false
+                                }
+                            }
+                        }
+                    ],
+                    "system_fingerprint": ""
+                }
+
+                data: {
+                    "id": "1-c1e4db8a-fbd4-42a8-8bfa-4a7679416301",
+                    "object": "chat.completion.chunk",
+                    "created": 1777896912,
+                    "model": "gemini-3.1-pro",
+                    "choices": [
+                        {
+                            "index": 0,
+                            "delta": {
+                                "role": "assistant"
+                            },
+                            "finish_reason": "stop",
+                            "content_filter_results": {
+                                "hate": {
+                                    "filtered": false
+                                },
+                                "self_harm": {
+                                    "filtered": false
+                                },
+                                "sexual": {
+                                    "filtered": false
+                                },
+                                "violence": {
+                                    "filtered": false
+                                },
+                                "jailbreak": {
+                                    "filtered": false,
+                                    "detected": false
+                                },
+                                "profanity": {
+                                    "filtered": false,
+                                    "detected": false
+                                }
+                            }
+                        }
+                    ],
+                    "system_fingerprint": "",
+                    "usage": {
+                        "prompt_tokens": 2,
+                        "completion_tokens": 213,
+                        "total_tokens": 215,
+                        "prompt_tokens_details": null,
+                        "completion_tokens_details": null
+                    }
+                }
+          headers: {}
+          x-apifox-name: stream流响应
+      security: []
+      x-apifox-folder: openai-completions接口
+      x-apifox-status: released
+      x-run-in-apifox: https://app.apifox.com/web/project/8212034/apis/api-452418916-run
+components:
+  schemas: {}
+  securitySchemes: {}
+servers: []
+security: []
+
+
+
+```
+
+
+
+
+# /v1/images/generations
+
+## OpenAPI Specification
+
+```yaml
+openapi: 3.0.1
+info:
+  title: ''
+  description: ''
+  version: 1.0.0
+paths:
+  /v1/images/generations:
+    post:
+      summary: /v1/images/generations
+      deprecated: false
+      description: |-
+        基础节点：
+        https://grsaiapi.com                (全球节点)
+        https://grsai.dakka.com.cn     (国内节点)
+
+        例子：
+        https://grsaiapi.com/v1/images/generations
+        https://grsai.dakka.com.cn/v1/images/generations
+      tags:
+        - openai-generations接口
+      parameters:
+        - name: base_url
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: 请前往以下页面获取APIKEY：https://grsai.ai/zh/dashboard/api-keys
+          required: false
+          example: Bearer sk-xxxxxxxxxxx
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                  title: 模型名称
+                  description: 支持所有图片生成模型
+                prompt:
+                  type: string
+                  title: 提示词
+                image:
+                  type: array
+                  items:
+                    type: string
+                  title: 参考图
+                  description: 支持base64与url链接
+                size:
+                  type: string
+                  title: 比例
+                  description: |-
+                    gpt-image-2系列模型分辨率参数说明
+                      gpt-image-2：支持比例（如 "16:9"）或1K像素值（如 "1024x1024"）
+                      gpt-image-2-vip：支持1-4K像素值（如 "1024x1024"、"2048x2048"），不支持比例
+
+                    自定义像素值约束（仅限 vip 模型）
+                       最大边长必须小于或等于3840px
+                       两条边都必须是16的倍数
+                       长边与短边之比不得超过 3:1
+                       总像素数必须至少为 655,360且不得超过 8,294,400
+
+
+                     gpt-image-2-vip比例参考（1K、2K、4K）：
+                    auto
+                    1:1：1024x1024、2048x2048、2880x2880
+                    16:9：1280x720、2048x1152、3840x2160
+                    9:16：720x1280、1152x2048、2160x3840
+                    4:3：1152x864、2304x1728、3264x2448
+                    3:4：864x1152、1728x2304、2448x3264
+                    3:2：1536x1024、2048x1360、3504x2336
+                    2:3：1024x1536、1360x2048、2336x3504
+                    5:4：1120x896、2240x1792、3200x2560
+                    4:5：896x1120、1792x2240、2560x3200
+                    21:9：1456x624、2912x1248、3840x1648
+                    9:21：624x1456、1248x2912、1648x3840
+                    1:3：688x2048、1280x3840
+                    3:1：2048x688、3840x1280
+                    2:1：1536x768、3072x1536、3840x1920
+                    1:2：768x1536、1536x3072、1920x3840
+
+                     gpt-image-2比例参考：
+                    auto
+                    1:1：1024x1024
+                    16:9：1672 x941
+                    9:16：941x1672 
+                    4:3：1443x1090
+                    3:4：1090x1443
+                    3:2：1536x1024
+                    2:3：1024x1536
+                    5:4：1408x1120
+                    4:5：1120x1408
+                    21:9：1920x832
+                    9:21：832x1920
+                    1:2：896x1792
+                    2:1：1792x896
+                  examples:
+                    - 1024×1024
+                response_format:
+                  type: string
+                  examples:
+                    - url
+              required:
+                - model
+                - prompt
+              x-apifox-orders:
+                - model
+                - prompt
+                - image
+                - size
+                - response_format
+            example:
+              model: gpt-image-2
+              prompt: 生成一张边牧与古牧正在抖音直播间直播带货截图
+              image: []
+              size: 1024x1024
+              response_format: url
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                      x-apifox-orders:
+                        - url
+                  usage:
+                    type: object
+                    properties:
+                      total_tokens:
+                        type: integer
+                      input_tokens:
+                        type: integer
+                      output_tokens:
+                        type: integer
+                      input_tokens_details:
+                        type: object
+                        properties: {}
+                        x-apifox-orders: []
+                    required:
+                      - total_tokens
+                      - input_tokens
+                      - output_tokens
+                      - input_tokens_details
+                    x-apifox-orders:
+                      - total_tokens
+                      - input_tokens
+                      - output_tokens
+                      - input_tokens_details
+                required:
+                  - created
+                  - data
+                  - usage
+                x-apifox-orders:
+                  - created
+                  - data
+                  - usage
+              example:
+                created: 1777689832
+                data:
+                  - url: >-
+                      https://file4.aitohumanize.com/file/dfa13fe60e7649e88f46037b968b54a3.png
+                usage:
+                  total_tokens: 6267
+                  input_tokens: 17
+                  output_tokens: 6250
+                  input_tokens_details: {}
+          headers: {}
+          x-apifox-name: 成功
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        title: 报错信息
+                    required:
+                      - message
+                    x-apifox-orders:
+                      - message
+                required:
+                  - error
+                x-apifox-orders:
+                  - error
+              example:
+                error:
+                  message: generation failed
+          headers: {}
+          x-apifox-name: 报错
+      security: []
+      x-apifox-folder: openai-generations接口
+      x-apifox-status: released
+      x-run-in-apifox: https://app.apifox.com/web/project/8212034/apis/api-452417029-run
+components:
+  schemas: {}
+  securitySchemes: {}
+servers: []
+security: []
+
+```

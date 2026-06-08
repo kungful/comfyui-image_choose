@@ -1,0 +1,13 @@
+[project]
+name = "comfyui-image-choose"
+description = "Visual image chooser for ComfyUI - click to select images and control batch routing. Includes image count node."
+version = "1.0.0"
+license = "LICENSE"
+
+[project.urls]
+Repository = "https://github.com/user/ComfyUI-Image-Choose"
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-Image-Choose"
+Icon = ""

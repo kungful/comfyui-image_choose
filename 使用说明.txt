@@ -1,0 +1,6 @@
+获取密钥填到api_key.json
+
+apimart密钥获取：https://apimart.ai/zh/keys
+runninghub密钥获取：https://www.runninghub.cn/enterprise-api/sharedApi
+deepseek密钥获取：https://platform.deepseek.com/
+grsai密钥获取：https://grsai.ai/zh
