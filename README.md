@@ -2,6 +2,9 @@
 
 ComfyUI 可视化图片选择器插件——点击预览并选择图片，灵活控制批次图像的路由与筛选。包含图片计数和批次合并功能。
 
+> **推荐搭配使用：[ComfyUI-APIMart-GPTImage2](https://github.com/kungful/comfyui_apimart_gptimage2)**
+> 本插件专注于图片选择与批次路由，是工作流中的"流程控制"枢纽。`workflows/` 目录下的工作流都需要借助 GPTImage2 的统一图片生成器来实际生成 AI 图像。两者是上下游关系，建议一并安装。
+
 ## 功能特性
 
 | 节点 | 功能说明 |
@@ -127,21 +130,4 @@ pip install -r requirements.txt
 |-----------|------|
 | `2图输入txt_to_image输入模特产品动作 - 升级 .json` | 2图输入商业工作流 |
 | `3图txt_to_image输入模特产品动作 - 升级.json` | 3图输入商业工作流 |
-| `4图输入模特产品动作 - 升级.json` | 4图输入商业工作流 |
-| `模特三视图创作.json` | 商业级模特三视图 |
-
-## 依赖
-
-```
-openai
-```
-
-## 许可证
-
-MIT License
-
-## 致谢
-
-- [ComfyUI](https://github.com/comfyanonymous/ComfyUI) - 强大的 AI 图像工作流引擎
-- [DeepSeek](https://platform.deepseek.com/) - LLM API 服务
-- [GrsAI](https://grsai.ai) - AI 服务提供商
+| `4图输入模特产品动作 - 升级.jso
