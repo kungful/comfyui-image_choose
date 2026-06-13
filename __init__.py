@@ -205,7 +205,8 @@ try:
     NODE_DISPLAY_NAME_MAPPINGS["GrsAIChat"] = "GrsAI Chat (对话)"
 except ImportError:
     pass
-
-NODE_DISPLAY_NAME_MAPPINGS["ImageChooser"] = "Image Chooser (图片预览选择器)"
-NODE_DISPLAY_NAME_MAPPINGS["ImageCount"] = "Image Count (图片数量)"
-NODE_DISPLAY_NAME_MAPPINGS["ImageBatchCombine"] = "Image Batch Combine (批次合并)"
+try:
+    from .images_to_pdf import ImagesToPDF, ImagePathList
+    NODE_CLASS_MAPPINGS["ImagesToPDF"] = ImagesToPDF
+    NODE_CLASS_MAPPINGS["ImagePathList"] = ImagePathList
+    NODE_DISPLAY_NAME_MAPPINGS["ImagesToPDF"] = "Images to PDF (图片�
