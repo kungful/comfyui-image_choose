@@ -228,6 +228,6 @@ class ImagePathList:
 
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "ImagesToPDF": "图片转PDF (Images to PDF)",
-    "ImagePathList": "图片路径列表 (Image Path List)",
+    "ImagesToPDF": "Images to PDF (图片转PDF)",
+    "ImagePathList": "Image Path List (图片路径列表)",
 }
