@@ -209,4 +209,27 @@ try:
     from .images_to_pdf import ImagesToPDF, ImagePathList
     NODE_CLASS_MAPPINGS["ImagesToPDF"] = ImagesToPDF
     NODE_CLASS_MAPPINGS["ImagePathList"] = ImagePathList
-    NODE_DISPLAY_NAME_MAPPINGS["ImagesToPDF"] = "Images to PDF (图片�
+    NODE_DISPLAY_NAME_MAPPINGS["ImagesToPDF"] = "Images to PDF (图片转PDF)"
+    NODE_DISPLAY_NAME_MAPPINGS["ImagePathList"] = "Image Path List (图片路径列表)"
+except ImportError:
+    pass
+try:
+    from .xgc_api import XGCAuth, XGCInstanceList, XGCInstanceDeploy, XGCInstanceControl, XGCImageList, XGCImageDestroy
+    NODE_CLASS_MAPPINGS["XGCAuth"] = XGCAuth
+    NODE_CLASS_MAPPINGS["XGCInstanceList"] = XGCInstanceList
+    NODE_CLASS_MAPPINGS["XGCInstanceDeploy"] = XGCInstanceDeploy
+    NODE_CLASS_MAPPINGS["XGCInstanceControl"] = XGCInstanceControl
+    NODE_CLASS_MAPPINGS["XGCImageList"] = XGCImageList
+    NODE_CLASS_MAPPINGS["XGCImageDestroy"] = XGCImageDestroy
+    NODE_DISPLAY_NAME_MAPPINGS["XGCAuth"] = "XGC Auth (仙宫云配置认证)"
+    NODE_DISPLAY_NAME_MAPPINGS["XGCInstanceList"] = "XGC Instance List (实例查询)"
+    NODE_DISPLAY_NAME_MAPPINGS["XGCInstanceDeploy"] = "XGC Deploy (部署实例)"
+    NODE_DISPLAY_NAME_MAPPINGS["XGCInstanceControl"] = "XGC Control (实例控制)"
+    NODE_DISPLAY_NAME_MAPPINGS["XGCImageList"] = "XGC Image List (镜像查询)"
+    NODE_DISPLAY_NAME_MAPPINGS["XGCImageDestroy"] = "XGC Image Destroy (销毁镜像)"
+except ImportError:
+    pass
+
+NODE_DISPLAY_NAME_MAPPINGS["ImageChooser"] = "Image Chooser (图片预览选择器)"
+NODE_DISPLAY_NAME_MAPPINGS["ImageCount"] = "Image Count (图片数量)"
+NODE_DISPLAY_NAME_MAPPINGS["ImageBatchCombine"] = "Image Batch Combine (批次合并)"
